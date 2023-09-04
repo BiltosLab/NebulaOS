@@ -5,4 +5,4 @@ following a guide on udemy hopefully i can create something cool .
 
 ## To run:
 
-''' make test'''
+'make test'
