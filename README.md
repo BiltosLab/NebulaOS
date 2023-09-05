@@ -1,7 +1,6 @@
 # NebulaTOS
 
-Learning OS dev atm just basic stuff this is my first hello world running as a bootloader
-following a guide on udemy .
+Learning OS dev atm just basic stuff this is my first hello world running as a bootloader.
 
 ## To run:
 Install these packages on linux (depends on distro)
