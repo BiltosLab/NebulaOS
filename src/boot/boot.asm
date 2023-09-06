@@ -69,6 +69,9 @@ load32:
     mov ss, ax 
     mov ebp, 0x00200000
     mov esp, ebp
+    in al, 0x92 ; Enable the A20 line using the Fast A20 Gate
+    or al, 2
+    out 0x92, al
     jmp $
 
 times 510-($ - $$) db 0
