@@ -7,6 +7,7 @@ Install these packages on linux (depends on distro)
 
 ```nasm qemu-system-x86```
 
-and to assemble and boot it up 
+build it first with ``` make all```
+then boot it up with ``` make run ```
 
-``` make test```
+
