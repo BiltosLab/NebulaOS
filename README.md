@@ -1,4 +1,4 @@
-# NebulaTOS
+# Nebula OS
 
 Learning OS development atm ,the goal is to create a small OS for educational purposes and to improve on my programming skills.
 
