@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "cstdlib": "c",
+        "bitset": "c",
+        "algorithm": "c",
+        "format": "c",
+        "__bit_reference": "c",
+        "map": "c",
+        "unordered_map": "c",
+        "random": "c"
+    }
+}
