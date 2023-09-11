@@ -29,4 +29,6 @@ clean:
 	rm -rf ./bin/os.bin
 	rm -rf ./build/kernelfull.o
 	rm -rf $(FILES)
-
+dog:
+	dd if=/dev/zero of=boot.iso bs=512 count=2880
+	dd if=./bin/os.bin of=boot.iso conv=notrunc bs=512 seek=0 count=1
