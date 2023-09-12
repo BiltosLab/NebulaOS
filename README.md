@@ -3,14 +3,19 @@
 Learning OS development atm ,the goal is to create a small OS for educational purposes and to improve on my programming skills.
 
 
-## Build Env:
-Install these packages on linux (depends on distro)
+## Build Environment:
+Install these packages(im using arch linux it may be different for your distro)
 
 ```nasm qemu-system-x86_64 i686-elf-gcc make```
 
+If for whatever reason you cant find the i686-elf-gcc in your distro's repo
+You will have to compile it on your own, refer to https://wiki.osdev.org/GCC_Cross-Compiler for more info.
+
+
+
 ## Run:
-build it first with ```make all```            
-then boot it up with ```make run```
+Build everything first with ```make all```            
+Then boot up qemu with ```make run```
 
 
 ## Resources Used:
