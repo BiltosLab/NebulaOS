@@ -2,7 +2,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "idt/idt.h"
-
+#include "io/io.h"
 
 
 uint16_t *video_mem = 0;
@@ -68,9 +68,10 @@ void kernel_main()
 {
     
     terminal_initialize();
-    print("Hello world!\nXD\tXD");
+    print("Hello world!\nHelloWorld\tHelloWorld");
     //Init IDT
     idt_init();
+    outb(0x60,0xff);
     
 
 }
