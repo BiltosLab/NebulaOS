@@ -12,6 +12,7 @@ _start:
     mov ss, ax
     mov ebp, 0x00200000
     mov esp, ebp
+    ; Todo later add a proper A20 line enabling with checks and multiple ways not just the Fast A20 line because not all computers support it
     in al, 0x92 ; Enable the A20 line using the Fast A20 Gate
     or al, 2
     out 0x92, al
@@ -31,6 +32,5 @@ _start:
     call kernel_main
     jmp $
     ;Solve alignment
-
 
 times 512-($ - $$) db 0

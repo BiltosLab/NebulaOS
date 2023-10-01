@@ -1,6 +1,6 @@
 #Makefile for nebula OS 
 FLAGS= -g -ffreestanding -falign-jumps -falign-functions -falign-labels -falign-loops -fstrength-reduce -fomit-frame-pointer -finline-functions -Wno-unused-function -fno-builtin -Werror -Wno-unused-label -Wno-cpp -Wno-unused-parameter -nostdlib -nostartfiles -nodefaultlibs -Wall -O0 -Iinc
-FILES= ./build/kernel.asm.o ./build/kernel.o ./build/idt/idt.asm.o ./build/memory/memory.o ./build/idt/idt.o ./build/io/io.asm.o ./build/memory/heap/heap.o ./build/memory/heap/kheap.o
+FILES= ./build/kernel.asm.o ./build/kernel.o ./build/idt/idt.asm.o ./build/memory/memory.o ./build/idt/idt.o ./build/io/io.asm.o ./build/memory/heap/heap.o ./build/memory/heap/kheap.o ./build/memory/paging/paging.o ./build/memory/paging/paging.asm.o
 INCLUDES= -I./src
 ASM=nasm
 CC=i686-elf-gcc
@@ -42,6 +42,14 @@ all: ./bin/boot.bin ./bin/kernel.bin
 
 ./build/memory/heap/kheap.o: ./src/memory/heap/kheap.c
 	$(CC) $(INCLUDES) -I./src/memory/heap $(FLAGS) -std=gnu99 -c ./src/memory/heap/kheap.c -o ./build/memory/heap/kheap.o
+
+
+./build/memory/paging/paging.o: ./src/memory/paging/paging.c
+	$(CC) $(INCLUDES) -I./src/memory/heap $(FLAGS) -std=gnu99 -c ./src/memory/paging/paging.c -o ./build/memory/paging/paging.o
+
+./build/memory/paging/paging.asm.o: ./src/memory/paging/paging.asm
+	$(ASM) -f elf -g ./src/memory/paging/paging.asm -o ./build/memory/paging/paging.asm.o
+
 run:
 	qemu-system-x86_64 -drive format=raw,file=./bin/os.bin
 clean:
