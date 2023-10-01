@@ -3,11 +3,12 @@
 #include <stdint.h>
 #include "idt/idt.h"
 #include "io/io.h"
-
+#include "memory/heap/kheap.h"
 
 uint16_t *video_mem = 0;
 uint16_t terminal_row= 0;
 uint16_t terminal_col= 0;
+
 uint16_t terminal_make_char(char c, char colour)
 {
     return (colour << 8) | c;
@@ -46,6 +47,24 @@ void terminal_initialize()
     }
 }
 
+void enablecursor(){
+    unsigned short cursorLocation = ((terminal_row * VGA_WIDTH) + terminal_col);
+    outb(0x3D4, 0x0F);
+  	outb(0x3D5, (unsigned char)(cursorLocation));
+  	//cursor HIGH port to vga INDEX register
+  	outb(0x3D4, 0x0E);
+  	outb(0x3D5, (unsigned char)((cursorLocation >> 8)));
+}
+
+void disablecursor(){
+    //Disable Cursor
+    outb(0x3D4, 0x0A);
+	outb(0x3D5, 0x20);
+}
+
+
+
+
 size_t strlen(const char* str){
     size_t len=0;
     while(str[len]){
@@ -66,11 +85,21 @@ void print(const char* str){
 
 void kernel_main()
 {
-    
     terminal_initialize();
     print("Hello world!\nHelloWorld\tHelloWorld");
+    kheap_init();
     //Init IDT
     idt_init();
-    
+    void* ptr = kmalloc(50);
+    void* ptr2 = kmalloc(5000);
+    void* ptr3 = kmalloc(5600);
+    kfree(ptr);
+    void* ptr4 = kmalloc(50);
+     if(ptr || ptr2 || ptr3 || ptr4 ){ // just to stop compiler errors for test
 
+    }
+    // testing the new malloc and free functions 
+    // Commands for GDB
+    // target remote | qemu-system-i386 -hda ./os.bin -S -gdb stdio
+    // add-symbol-file ../build/kernelfull.o 0x100000
 }
