@@ -87,19 +87,15 @@ void kernel_main()
 {
     terminal_initialize();
     print("Hello world!\nHelloWorld\tHelloWorld");
-    kheap_init();
-    //Init IDT
-    idt_init();
-    void* ptr = kmalloc(50);
-    void* ptr2 = kmalloc(5000);
-    void* ptr3 = kmalloc(5600);
-    kfree(ptr);
-    void* ptr4 = kmalloc(50);
-     if(ptr || ptr2 || ptr3 || ptr4 ){ // just to stop compiler errors for test
 
-    }
-    // testing the new malloc and free functions 
-    // Commands for GDB
-    // target remote | qemu-system-i386 -hda ./os.bin -S -gdb stdio
-    // add-symbol-file ../build/kernelfull.o 0x100000
+    //Initialize the heap
+    kheap_init();
+
+    //Initialize the interrupt descriptor table
+    idt_init();
+    
 }
+
+// Commands for GDB
+// target remote | qemu-system-i386 -hda ./os.bin -S -gdb stdio
+// add-symbol-file ../build/kernelfull.o 0x100000
