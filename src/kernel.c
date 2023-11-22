@@ -6,7 +6,7 @@
 #include "memory/heap/kheap.h"
 #include "memory/paging/paging.h"
 #include "disk/disk.h"
-
+//#define DEBUG
 uint16_t *video_mem = 0;
 uint16_t terminal_row= 0;
 uint16_t terminal_col= 0;
@@ -91,8 +91,14 @@ void kernel_main()
     terminal_initialize();
     print("Hello world!\nHelloWorld\tHelloWorld");
 
+
+
     //Initialize the heap
     kheap_init();
+    //Search and initilaize the disks
+    disk_search_and_init();
+
+
 
     //Initialize the interrupt descriptor table
     idt_init();
@@ -104,8 +110,7 @@ void kernel_main()
 
     enable_paging();
 
-    char buf[512];
-    disk_read_sector(0,1,buf);
+    
     //Enable the system interrupts
     enable_interrupts();  
 
