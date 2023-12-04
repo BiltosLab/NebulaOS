@@ -83,38 +83,57 @@ void print(const char* str){
     }
     
 }
+void printok()
+{   
+    char a[]="  [OK!]\n";
+        size_t len = strlen(a);
+    for (int i = 0; i < len; i++)
+    {
+        if (a[i]=='[' || a[i]==']')
+        {
+            terminal_writechar(a[i],15);
+        }
+        else{
+            terminal_writechar(a[i],10);
 
-
+        }
+    }
+}
 static struct paging_4gb_chunk* kernel_chunk = 0;
 void kernel_main()
 {
     terminal_initialize();
-    print("Hello world!\nHelloWorld\tHelloWorld");
+   // print("Hello world!\nHelloWorld\tHelloWorld\n");
+    print("Nebula OS version 0.001 starting\n");
 
-
-
+    print("Initializing the heap");
     //Initialize the heap
     kheap_init();
+    printok();
+    print("Search and initilaize the disks");
     //Search and initilaize the disks
     disk_search_and_init();
-
-
+    //start at lecture 27
+    printok();
 
     //Initialize the interrupt descriptor table
+    print("Initialize the interrupt descriptor table");
+
     idt_init();
-    
+    printok();
     // Setup Paging
     kernel_chunk = paging_new_4gb(PAGING_IS_WRITEABLE | PAGING_IS_PRESENT | PAGING_ACCESS_FROM_ALL);
     
     paging_switch(paging_4gb_chunk_get_directory(kernel_chunk));
+    print("enable paging");
 
     enable_paging();
-
-    
+    printok();
     //Enable the system interrupts
+    print("enable interrupts");
     enable_interrupts();  
-
     
+    printok();
 }
 
 // Commands for GDB
