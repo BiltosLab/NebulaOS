@@ -11,6 +11,13 @@ uint16_t *video_mem = 0;
 uint16_t terminal_row= 0;
 uint16_t terminal_col= 0;
 
+typedef char* va_list;
+
+#define va_start(ap, last_arg) (ap = (va_list)&last_arg + sizeof(last_arg))
+#define va_arg(ap, type) (*(type*)((ap += sizeof(type)) - sizeof(type)))
+#define va_end(ap) (ap = (va_list)0)
+
+
 uint16_t terminal_make_char(char c, char colour)
 {
     return (colour << 8) | c;
@@ -83,6 +90,103 @@ void print(const char* str){
     }
     
 }
+void reverse(char str[], int length) {
+    int start = 0;
+    int end = length - 1;
+    while (start < end) {
+        // Swap characters at start and end
+        char temp = str[start];
+        str[start] = str[end];
+        str[end] = temp;
+        // Move towards the center
+        start++;
+        end--;
+    }
+}
+
+char* itoa(int num, char str[], int base) {
+    int i = 0;
+    int isNegative = 0;
+
+    // Handle 0 explicitly, otherwise empty string is printed
+    if (num == 0) {
+        str[i++] = '0';
+        str[i] = '\0';
+        return str;
+    }
+
+    // Handle negative numbers only if base is 10
+    if (num < 0 && base == 10) {
+        isNegative = 1;
+        num = -num;
+    }
+
+    // Process individual digits
+    while (num != 0) {
+        int remainder = num % base;
+        str[i++] = (remainder > 9) ? (remainder - 10) + 'a' : remainder + '0';
+        num = num / base;
+    }
+
+    // Append negative sign for base 10
+    if (isNegative && base == 10) {
+        str[i++] = '-';
+    }
+
+    str[i] = '\0';  // Null-terminate the string
+
+    // Reverse the string
+    reverse(str, i);
+
+    return str;
+}
+
+void printf(const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+
+    while (*format != '\0') {
+        if (*format == '%') {
+            format++; // Move past '%'
+            switch (*format) {
+                case 's': {
+                    char* str = va_arg(args, char*);
+                    while (*str != '\0') {
+                        terminal_writechar(*str, 15); // Adjust color as needed
+                        str++;
+                    }
+                    break;
+                }
+                case 'd': {
+                        long long num = va_arg(args, int);
+                        char buffer[20];       // Adjust the buffer size as needed
+                        itoa(num, buffer, 10); // Convert integer to string in base 10
+                        size_t buffer_len = strlen(buffer);
+
+                        // Print each character in the buffer
+                        for (size_t j = 0; j < buffer_len; j++)
+                        {
+                            terminal_writechar(buffer[j], 15); // Adjust color as needed
+                        }
+                        break;
+}
+                // Add more cases for other format specifiers as needed
+                default:
+                    // Handle unsupported format specifiers or just print '%'
+                    terminal_writechar('%', 15); // Adjust color as needed
+                    terminal_writechar(*format, 15); // Adjust color as needed
+                    break;
+            }
+        } else {
+            terminal_writechar(*format, 15); // Adjust color as needed
+        }
+        format++;
+    }
+
+    va_end(args);
+}
+
+
 void printok()
 {   
     char a[]="  [OK!]\n";
@@ -99,9 +203,27 @@ void printok()
         }
     }
 }
+
+int memorydetect()
+{
+    unsigned short total;
+    unsigned char lowmem, highmem;
+ 
+    outb(0x70, 0x30);
+    lowmem = insb(0x71);
+    outb(0x70, 0x31);
+    highmem = insb(0x71);
+ 
+    total = lowmem | highmem << 8;
+    return total;
+}
+
+
+
 static struct paging_4gb_chunk* kernel_chunk = 0;
 void kernel_main()
 {
+    long long x = memorydetect();
     terminal_initialize();
    // print("Hello world!\nHelloWorld\tHelloWorld\n");
     print("Nebula OS version 0.001 starting\n");
@@ -134,6 +256,8 @@ void kernel_main()
     enable_interrupts();  
     
     printok();
+    printf("Free Memory %d KB\n", x);
+
 }
 
 // Commands for GDB
